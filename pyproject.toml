@@ -1,0 +1,19 @@
+[project]
+name = "dna-toolkit"
+version = "0.1.0"
+description = "一个轻量的 DNA 序列分析工具包（计算生物学入门项目）"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "cyjiang" }]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0"]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["dna_toolkit"]
