@@ -1,7 +1,7 @@
 [project]
 name = "dna-toolkit"
 version = "0.1.0"
-description = "一个轻量的 DNA 序列分析工具包（计算生物学入门项目）"
+description = "DNA 序列分析的常用操作"
 readme = "README.md"
 requires-python = ">=3.9"
 license = { text = "MIT" }

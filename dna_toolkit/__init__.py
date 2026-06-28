@@ -1,4 +1,4 @@
-"""dna-toolkit: 一个轻量的 DNA 序列分析工具包。"""
+"""DNA 序列分析工具。"""
 
 from .io import read_fasta, read_fasta_dict
 from .kmer import kmer_counts, most_common_kmers

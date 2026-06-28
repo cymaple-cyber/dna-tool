@@ -1,16 +1,10 @@
-"""核心序列分析功能：互补、转录、翻译、GC 含量等。
-
-本模块只处理 DNA/RNA 的字符串表示，不依赖任何第三方库，
-方便理解每一步生物学操作背后的计算逻辑。
-"""
+"""序列基本操作：互补、转录、翻译、GC 含量等。"""
 
 from collections import Counter
 
-# DNA 碱基的互补配对关系：A-T, G-C
 _DNA_COMPLEMENT = {"A": "T", "T": "A", "G": "C", "C": "G"}
 
-# 标准遗传密码子表（DNA 版本，T 而非 U）。
-# 每 3 个碱基（一个密码子）对应一个氨基酸，"*" 表示终止密码子。
+# 标准遗传密码子表（DNA 版，用 T）。* 为终止密码子。
 CODON_TABLE = {
     "TTT": "F", "TTC": "F", "TTA": "L", "TTG": "L",
     "CTT": "L", "CTC": "L", "CTA": "L", "CTG": "L",
@@ -32,12 +26,12 @@ CODON_TABLE = {
 
 
 def clean(seq):
-    """规范化序列：转大写并去除空白字符。"""
+    """转大写并去掉空白。"""
     return "".join(seq.split()).upper()
 
 
 def validate_dna(seq):
-    """校验是否为合法 DNA 序列（只含 A/T/G/C），非法时抛出 ValueError。"""
+    """校验只含 A/T/G/C，否则抛 ValueError，返回规范化后的序列。"""
     seq = clean(seq)
     invalid = set(seq) - set(_DNA_COMPLEMENT)
     if invalid:
@@ -46,14 +40,13 @@ def validate_dna(seq):
 
 
 def nucleotide_counts(seq):
-    """统计四种碱基的数量，返回有序字典 {A, C, G, T}。"""
     seq = validate_dna(seq)
     counts = Counter(seq)
     return {base: counts.get(base, 0) for base in "ACGT"}
 
 
 def gc_content(seq):
-    """计算 GC 含量（百分比）。GC 含量是衡量序列稳定性的常用指标。"""
+    """GC 含量，百分比。"""
     seq = validate_dna(seq)
     if not seq:
         return 0.0
@@ -62,28 +55,22 @@ def gc_content(seq):
 
 
 def complement(seq):
-    """返回互补链（不反向）。"""
     seq = validate_dna(seq)
     return "".join(_DNA_COMPLEMENT[base] for base in seq)
 
 
 def reverse_complement(seq):
-    """返回反向互补链——双链 DNA 中与给定链配对的另一条链（5'->3' 方向）。"""
     return complement(seq)[::-1]
 
 
 def transcribe(seq):
-    """DNA 转录为 mRNA：将 T 替换为 U。"""
+    """DNA -> mRNA，T 换成 U。"""
     seq = validate_dna(seq)
     return seq.replace("T", "U")
 
 
 def translate(seq, to_stop=True):
-    """将 DNA 编码链翻译为氨基酸序列（单字母表示）。
-
-    以 3 个碱基为一组读取密码子；末尾不足 3 个的碱基被忽略。
-    to_stop=True 时遇到终止密码子停止翻译。
-    """
+    """按密码子翻译成氨基酸序列。末尾不足 3 个碱基忽略。"""
     seq = validate_dna(seq)
     protein = []
     for i in range(0, len(seq) - 2, 3):
